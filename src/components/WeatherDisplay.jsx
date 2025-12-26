@@ -3,7 +3,7 @@
 
 import { getWeatherIcon } from '../utils/weatherIcons'
 
-export default function WeatherDisplay({ weatherData, loading, error }) {
+export default function WeatherDisplay({ weatherData, loading, error, onAddFavorite, isFavorite }) {
   // Show loading message while fetching data
   if (loading) {
     return (
@@ -34,10 +34,25 @@ export default function WeatherDisplay({ weatherData, loading, error }) {
   // If we have weatherData, display it
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
-      {/* City name */}
-      <h2 className="text-3xl font-bold text-gray-800 mb-2">
-        {weatherData.city}, {weatherData.country}
-      </h2>
+      {/* City name with favorite button */}
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-3xl font-bold text-gray-800">
+          {weatherData.city}, {weatherData.country}
+        </h2>
+        
+        {/* Add/Remove favorite button */}
+        <button
+          onClick={() => onAddFavorite(weatherData.city)}
+          className={`text-3xl transition ${
+            isFavorite 
+              ? 'text-red-500 hover:text-red-600' 
+              : 'text-gray-300 hover:text-yellow-400'
+          }`}
+          title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        >
+          {isFavorite ? '❤️' : '🤍'}
+        </button>
+      </div>
 
       {/* Weather icon and description */}
       <div className="flex items-center gap-4 mb-4">

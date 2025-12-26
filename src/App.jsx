@@ -1,18 +1,65 @@
 // src/App.jsx - The main App component
 // This is where all other components get rendered and where we manage data
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SearchBar from './components/SearchBar'
 import WeatherDisplay from './components/WeatherDisplay'
+import FavoritesList from './components/FavoritesList'
 
 export default function App() {
   // State variables to manage weather data
   // weatherData: Stores the weather information we get from the API
   // loading: True while we're fetching data from API
   // error: Stores any error messages if something goes wrong
+  // favorites: Array of favorite cities saved by user
   const [weatherData, setWeatherData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [favorites, setFavorites] = useState([])
+
+  // useEffect: Loads favorites from localStorage when component mounts
+  // localStorage persists data even after browser closes
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem('weatherAppFavorites')
+    if (savedFavorites) {
+      // Parse the JSON string back into an array
+      setFavorites(JSON.parse(savedFavorites))
+    }
+  }, [])
+
+  // saveFavoritesToStorage: Helper function to save favorites to localStorage
+  const saveFavoritesToStorage = (updatedFavorites) => {
+    // Convert array to JSON string and save to localStorage
+    localStorage.setItem('weatherAppFavorites', JSON.stringify(updatedFavorites))
+  }
+
+  // handleAddFavorite: Add or remove a city from favorites
+  const handleAddFavorite = (city) => {
+    // Check if city is already in favorites
+    if (favorites.includes(city)) {
+      // Remove it if already there
+      const updated = favorites.filter(fav => fav !== city)
+      setFavorites(updated)
+      saveFavoritesToStorage(updated)
+    } else {
+      // Add it if not there
+      const updated = [...favorites, city]
+      setFavorites(updated)
+      saveFavoritesToStorage(updated)
+    }
+  }
+
+  // handleFavoriteClick: When user clicks a favorite city, search for it
+  const handleFavoriteClick = (city) => {
+    handleSearch(city)
+  }
+
+  // handleRemoveFavorite: Remove a city from favorites
+  const handleRemoveFavorite = (city) => {
+    const updated = favorites.filter(fav => fav !== city)
+    setFavorites(updated)
+    saveFavoritesToStorage(updated)
+  }
 
   // handleSearch: Called when user searches for a city
   // This function fetches weather data from OpenWeatherMap API
@@ -86,6 +133,16 @@ export default function App() {
           weatherData={weatherData}
           loading={loading}
           error={error}
+          onAddFavorite={handleAddFavorite}
+          isFavorite={weatherData && favorites.includes(weatherData.city)}
+        />
+
+        {/* FavoritesList component: Shows user's favorite cities */}
+        {/* User can click favorites to quickly search or remove them */}
+        <FavoritesList 
+          favorites={favorites}
+          onFavoriteClick={handleFavoriteClick}
+          onRemoveFavorite={handleRemoveFavorite}
         />
       </main>
     </div>
