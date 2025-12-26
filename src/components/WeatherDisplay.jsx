@@ -1,6 +1,8 @@
 // src/components/WeatherDisplay.jsx
 // This component displays the weather data for a city
 
+import { getWeatherIcon } from '../utils/weatherIcons'
+
 export default function WeatherDisplay({ weatherData, loading, error }) {
   // Show loading message while fetching data
   if (loading) {
@@ -37,10 +39,18 @@ export default function WeatherDisplay({ weatherData, loading, error }) {
         {weatherData.city}, {weatherData.country}
       </h2>
 
-      {/* Weather description */}
-      <p className="text-gray-600 text-lg mb-4 capitalize">
-        {weatherData.description}
-      </p>
+      {/* Weather icon and description */}
+      <div className="flex items-center gap-4 mb-4">
+        {/* Weather icon - gets the emoji based on the weather description */}
+        <div className="text-6xl">
+          {getWeatherIcon(weatherData.description)}
+        </div>
+        
+        {/* Weather description text */}
+        <p className="text-gray-600 text-lg capitalize">
+          {weatherData.description}
+        </p>
+      </div>
 
       {/* Temperature */}
       <div className="text-5xl font-bold text-blue-500 mb-4">
