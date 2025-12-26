@@ -50,22 +50,24 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
 
   // If we have weatherData, display it with animations
   return (
-    <div className={`mt-8 rounded-xl shadow-2xl p-8 max-w-2xl mx-auto animate-fade-in transition-colors duration-500 ${
+    <div className={`mt-6 sm:mt-8 rounded-xl shadow-2xl p-4 sm:p-8 max-w-2xl mx-auto animate-fade-in transition-colors duration-500 ${
       darkMode
         ? 'bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600'
         : 'bg-gradient-to-br from-white to-blue-50'
     }`}>
       {/* City name with favorite button */}
-      <div className={`flex items-center justify-between mb-6 pb-6 border-b-2 ${
+      <div className={`flex items-start sm:items-center justify-between mb-4 sm:mb-6 pb-4 sm:pb-6 border-b-2 gap-3 ${
         darkMode ? 'border-gray-600' : 'border-blue-100'
       }`}>
-        <div>
-          <h2 className={`text-4xl font-bold ${
+        <div className="min-w-0">
+          <h2 className={`text-2xl sm:text-4xl font-bold ${
             darkMode ? 'text-white' : 'text-gray-800'
           }`}>
             {weatherData.city}
           </h2>
-          <p className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
+          <p className={`text-sm sm:text-lg ${
+            darkMode ? 'text-gray-400' : 'text-gray-500'
+          }`}>
             {weatherData.country}
           </p>
         </div>
@@ -73,7 +75,7 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
         {/* Add/Remove favorite button with animation */}
         <button
           onClick={() => onAddFavorite(weatherData.city)}
-          className={`text-5xl transition transform hover:scale-125 ${
+          className={`text-4xl sm:text-5xl transition transform hover:scale-125 flex-shrink-0 ${
             isFavorite 
               ? 'text-red-500 animate-pulse' 
               : darkMode
@@ -87,20 +89,20 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
       </div>
 
       {/* Weather icon and description */}
-      <div className="flex items-center gap-6 mb-8">
+      <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
         {/* Weather icon - gets the emoji based on the weather description */}
-        <div className="text-8xl animate-bounce" style={{ animationDelay: '0s' }}>
+        <div className="text-6xl sm:text-8xl flex-shrink-0 animate-bounce" style={{ animationDelay: '0s' }}>
           {getWeatherIcon(weatherData.description)}
         </div>
         
         {/* Weather description text */}
         <div>
-          <p className={`text-2xl capitalize font-semibold ${
+          <p className={`text-xl sm:text-2xl capitalize font-semibold ${
             darkMode ? 'text-gray-200' : 'text-gray-600'
           }`}>
             {weatherData.description}
           </p>
-          <p className={`text-sm mt-2 ${
+          <p className={`text-xs sm:text-sm mt-2 ${
             darkMode ? 'text-gray-400' : 'text-gray-500'
           }`}>
             Current conditions in {weatherData.city}
@@ -109,34 +111,34 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
       </div>
 
       {/* Temperature - large and prominent */}
-      <div className={`mb-8 text-center rounded-lg p-6 text-white ${
+      <div className={`mb-6 sm:mb-8 text-center rounded-lg p-4 sm:p-6 text-white ${
         darkMode
           ? 'bg-gradient-to-r from-blue-700 to-blue-800'
           : 'bg-gradient-to-r from-blue-400 to-blue-600'
       }`}>
-        <p className="text-sm font-semibold mb-2 opacity-90">Temperature</p>
-        <div className="text-6xl font-bold">
+        <p className="text-xs sm:text-sm font-semibold mb-2 opacity-90">Temperature</p>
+        <div className="text-5xl sm:text-6xl font-bold">
           {Math.round(weatherData.temperature)}°C
         </div>
-        <p className="text-sm mt-2 opacity-90">
+        <p className="text-xs sm:text-sm mt-2 opacity-90">
           Feels like {Math.round(weatherData.feelsLike)}°C
         </p>
       </div>
 
       {/* Weather details grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4">
         {/* Humidity */}
-        <div className={`p-5 rounded-lg transition transform hover:scale-105 ${
+        <div className={`p-3 sm:p-5 rounded-lg transition transform hover:scale-105 ${
           darkMode
             ? 'bg-gray-700 hover:bg-gray-600'
             : 'bg-blue-50 hover:bg-blue-100'
         }`}>
-          <p className={`text-sm font-semibold mb-2 ${
+          <p className={`text-xs sm:text-sm font-semibold mb-2 ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             💧 Humidity
           </p>
-          <p className={`text-3xl font-bold ${
+          <p className={`text-2xl sm:text-3xl font-bold ${
             darkMode ? 'text-blue-400' : 'text-blue-600'
           }`}>
             {weatherData.humidity}%
@@ -144,17 +146,17 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
         </div>
 
         {/* Wind Speed */}
-        <div className={`p-5 rounded-lg transition transform hover:scale-105 ${
+        <div className={`p-3 sm:p-5 rounded-lg transition transform hover:scale-105 ${
           darkMode
             ? 'bg-gray-700 hover:bg-gray-600'
             : 'bg-blue-50 hover:bg-blue-100'
         }`}>
-          <p className={`text-sm font-semibold mb-2 ${
+          <p className={`text-xs sm:text-sm font-semibold mb-2 ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
-            💨 Wind Speed
+            💨 Wind
           </p>
-          <p className={`text-3xl font-bold ${
+          <p className={`text-2xl sm:text-3xl font-bold ${
             darkMode ? 'text-blue-400' : 'text-blue-600'
           }`}>
             {weatherData.windSpeed} m/s
@@ -162,38 +164,38 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
         </div>
 
         {/* Pressure */}
-        <div className={`p-5 rounded-lg transition transform hover:scale-105 ${
+        <div className={`p-3 sm:p-5 rounded-lg transition transform hover:scale-105 ${
           darkMode
             ? 'bg-gray-700 hover:bg-gray-600'
             : 'bg-blue-50 hover:bg-blue-100'
         }`}>
-          <p className={`text-sm font-semibold mb-2 ${
+          <p className={`text-xs sm:text-sm font-semibold mb-2 ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             📊 Pressure
           </p>
-          <p className={`text-3xl font-bold ${
+          <p className={`text-2xl sm:text-3xl font-bold ${
             darkMode ? 'text-blue-400' : 'text-blue-600'
           }`}>
-            {weatherData.pressure} mb
+            {weatherData.pressure}
           </p>
         </div>
 
         {/* Feels Like */}
-        <div className={`p-5 rounded-lg transition transform hover:scale-105 ${
+        <div className={`p-3 sm:p-5 rounded-lg transition transform hover:scale-105 ${
           darkMode
             ? 'bg-gray-700 hover:bg-gray-600'
             : 'bg-blue-50 hover:bg-blue-100'
         }`}>
-          <p className={`text-sm font-semibold mb-2 ${
+          <p className={`text-xs sm:text-sm font-semibold mb-2 ${
             darkMode ? 'text-gray-300' : 'text-gray-600'
           }`}>
             🌡️ Feels Like
           </p>
-          <p className={`text-3xl font-bold ${
+          <p className={`text-2xl sm:text-3xl font-bold ${
             darkMode ? 'text-blue-400' : 'text-blue-600'
           }`}>
-            {Math.round(weatherData.feelsLike)}°C
+            {Math.round(weatherData.feelsLike)}°
           </p>
         </div>
       </div>

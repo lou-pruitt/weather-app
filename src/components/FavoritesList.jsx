@@ -14,24 +14,24 @@ export default function FavoritesList({ favorites, onFavoriteClick, onRemoveFavo
   }
 
   return (
-    <div className={`mt-6 rounded-lg shadow-md p-6 transition-colors duration-500 ${
+    <div className={`mt-6 sm:mt-8 rounded-lg shadow-md p-4 sm:p-6 transition-colors duration-500 ${
       darkMode
         ? 'bg-gray-800 border border-gray-700'
         : 'bg-white'
     }`}>
       {/* Title */}
-      <h2 className={`text-2xl font-bold mb-4 ${
+      <h2 className={`text-xl sm:text-2xl font-bold mb-4 ${
         darkMode ? 'text-white' : 'text-gray-800'
       }`}>
-        ⭐ Favorite Cities
+        ⭐ Favorites
       </h2>
 
-      {/* Grid of favorite cities */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+      {/* Grid of favorite cities - responsive grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
         {favorites.map((city, index) => (
           <div
             key={index}
-            className={`rounded-lg p-3 cursor-pointer transition ${
+            className={`rounded-lg p-2 sm:p-3 cursor-pointer transition ${
               darkMode
                 ? 'bg-gray-700 hover:bg-gray-600'
                 : 'bg-blue-50 hover:bg-blue-100'
@@ -40,9 +40,7 @@ export default function FavoritesList({ favorites, onFavoriteClick, onRemoveFavo
             {/* City button - click to search */}
             <button
               onClick={() => onFavoriteClick(city)}
-              className={`w-full text-left text-sm font-semibold mb-2 hover:${
-                darkMode ? 'text-blue-400' : 'text-blue-600'
-              } ${
+              className={`w-full text-left text-xs sm:text-sm font-semibold mb-2 ${
                 darkMode ? 'text-gray-200' : 'text-gray-800'
               }`}
             >
@@ -52,9 +50,9 @@ export default function FavoritesList({ favorites, onFavoriteClick, onRemoveFavo
             {/* Remove button - delete from favorites */}
             <button
               onClick={() => onRemoveFavorite(city)}
-              className="w-full text-xs font-semibold text-red-500 hover:text-red-700"
+              className="w-full text-xs font-semibold text-red-500 hover:text-red-700 mt-1"
             >
-              Remove ✕
+              Remove
             </button>
           </div>
         ))}

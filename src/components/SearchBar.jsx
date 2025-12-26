@@ -30,15 +30,15 @@ export default function SearchBar({ onSearch, darkMode }) {
       darkMode
         ? 'bg-gray-800 border border-gray-700'
         : 'bg-white'
-    } rounded-xl shadow-lg p-6 mb-8 animate-fade-in transition-colors duration-500`}>
-      <form onSubmit={handleSubmit} className="flex gap-3">
+    } rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8 animate-fade-in transition-colors duration-500`}>
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         {/* Input field where user types the city name */}
         <input
           type="text"
-          placeholder="Enter city name... (e.g., London, Tokyo, NYC)"
+          placeholder="Enter city name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className={`flex-1 px-5 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 transition placeholder-gray-400 ${
+          className={`flex-1 px-3 sm:px-5 py-2 sm:py-3 border-2 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 transition placeholder-gray-400 ${
             darkMode
               ? 'bg-gray-700 border-gray-600 text-white focus:border-blue-400 focus:ring-blue-400/30'
               : 'bg-white border-gray-200 text-gray-800 focus:border-blue-500 focus:ring-blue-200'
@@ -49,7 +49,7 @@ export default function SearchBar({ onSearch, darkMode }) {
         {/* Submit button with hover effects */}
         <button
           type="submit"
-          className={`px-8 py-3 rounded-lg font-semibold transition transform hover:scale-105 active:scale-95 shadow-md ${
+          className={`px-4 sm:px-8 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base transition transform hover:scale-105 active:scale-95 shadow-md whitespace-nowrap ${
             darkMode
               ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white'
               : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white'
