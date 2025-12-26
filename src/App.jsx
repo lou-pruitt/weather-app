@@ -5,8 +5,13 @@ import { useState, useEffect } from 'react'
 import SearchBar from './components/SearchBar'
 import WeatherDisplay from './components/WeatherDisplay'
 import FavoritesList from './components/FavoritesList'
+import DarkModeToggle from './components/DarkModeToggle'
+import { useDarkMode } from './hooks/useDarkMode'
 
 export default function App() {
+  // Use the dark mode hook to manage dark mode state
+  const { darkMode, toggleDarkMode, mounted } = useDarkMode()
+
   // State variables to manage weather data
   // weatherData: Stores the weather information we get from the API
   // loading: True while we're fetching data from API
@@ -113,19 +118,32 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600">
-      {/* Header section */}
-      <header className="bg-white shadow">
-        <h1 className="text-3xl font-bold text-gray-800 p-6">
-          🌤️ Weather App
-        </h1>
+    <div className={`min-h-screen transition-colors duration-500 ${
+      darkMode
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+        : 'bg-gradient-to-br from-blue-400 to-blue-600'
+    }`}>
+      {/* Header section with toggle */}
+      <header className={`${
+        darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white'
+      } shadow transition-colors duration-500`}>
+        <div className="container mx-auto px-6 py-6 flex items-center justify-between">
+          <h1 className={`text-3xl font-bold ${
+            darkMode ? 'text-white' : 'text-gray-800'
+          }`}>
+            🌤️ Weather App
+          </h1>
+          
+          {/* Dark mode toggle button */}
+          {mounted && <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />}
+        </div>
       </header>
       
       {/* Main content area */}
       <main className="container mx-auto p-6">
         {/* SearchBar component: User searches for a city */}
         {/* onSearch prop passes the handleSearch function to SearchBar */}
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} darkMode={darkMode} />
 
         {/* WeatherDisplay component: Shows the weather results */}
         {/* Props pass the data and states we defined above */}
@@ -135,6 +153,7 @@ export default function App() {
           error={error}
           onAddFavorite={handleAddFavorite}
           isFavorite={weatherData && favorites.includes(weatherData.city)}
+          darkMode={darkMode}
         />
 
         {/* FavoritesList component: Shows user's favorite cities */}
@@ -143,6 +162,7 @@ export default function App() {
           favorites={favorites}
           onFavoriteClick={handleFavoriteClick}
           onRemoveFavorite={handleRemoveFavorite}
+          darkMode={darkMode}
         />
       </main>
     </div>
