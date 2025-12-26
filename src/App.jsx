@@ -127,7 +127,7 @@ export default function App() {
       <header className={`${
         darkMode ? 'bg-gray-800 border-b border-gray-700' : 'bg-white'
       } shadow transition-colors duration-500`}>
-        <div className="container mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
           <h1 className={`text-3xl font-bold ${
             darkMode ? 'text-white' : 'text-gray-800'
           }`}>
@@ -140,7 +140,7 @@ export default function App() {
       </header>
       
       {/* Main content area */}
-      <main className="container mx-auto p-6">
+      <main className="container mx-auto p-4 sm:p-6">
         {/* SearchBar component: User searches for a city */}
         {/* onSearch prop passes the handleSearch function to SearchBar */}
         <SearchBar onSearch={handleSearch} darkMode={darkMode} />
