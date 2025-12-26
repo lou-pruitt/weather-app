@@ -4,7 +4,10 @@
 import { getWeatherIcon } from '../utils/weatherIcons'
 import LoadingSpinner from './LoadingSpinner'
 
-export default function WeatherDisplay({ weatherData, loading, error, onAddFavorite, isFavorite, darkMode }) {
+export default function WeatherDisplay({ weatherData, loading, error, onAddFavorite, isFavorite, darkMode, unit }) {
+  // Get the temperature unit symbol based on metric or imperial
+  const unitSymbol = unit === 'metric' ? '°C' : '°F'
+  
   // Show loading spinner while fetching data
   if (loading) {
     return <LoadingSpinner darkMode={darkMode} />
@@ -118,10 +121,10 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
       }`}>
         <p className="text-xs font-semibold mb-1 opacity-90">Temperature</p>
         <div className="text-4xl sm:text-5xl font-bold">
-          {Math.round(weatherData.temperature)}°C
+          {Math.round(weatherData.temperature)}{unitSymbol}
         </div>
         <p className="text-xs mt-1 opacity-90">
-          Feels like {Math.round(weatherData.feelsLike)}°C
+          Feels like {Math.round(weatherData.feelsLike)}{unitSymbol}
         </p>
       </div>
 
@@ -195,7 +198,7 @@ export default function WeatherDisplay({ weatherData, loading, error, onAddFavor
           <p className={`text-xl sm:text-2xl font-bold ${
             darkMode ? 'text-blue-400' : 'text-blue-600'
           }`}>
-            {Math.round(weatherData.feelsLike)}°
+            {Math.round(weatherData.feelsLike)}{unitSymbol}
           </p>
         </div>
       </div>

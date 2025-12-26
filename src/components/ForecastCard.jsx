@@ -3,7 +3,10 @@
 
 import { getWeatherIcon } from '../utils/weatherIcons'
 
-export default function ForecastCard({ date, temperature, description, darkMode }) {
+export default function ForecastCard({ date, temperature, description, darkMode, unit }) {
+  // Get the temperature unit symbol based on metric or imperial
+  const unitSymbol = unit === 'metric' ? '°C' : '°F'
+  
   // Convert the date string to a readable format
   // Example: "2025-12-26" becomes "Thu, Dec 26"
   const formatDate = (dateString) => {
@@ -34,7 +37,7 @@ export default function ForecastCard({ date, temperature, description, darkMode 
       <p className={`text-xl font-bold text-center ${
         darkMode ? 'text-blue-400' : 'text-blue-600'
       }`}>
-        {Math.round(temperature)}°C
+        {Math.round(temperature)}{unitSymbol}
       </p>
 
       {/* Weather description */}

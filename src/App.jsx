@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar'
 import WeatherDisplay from './components/WeatherDisplay'
 import FavoritesList from './components/FavoritesList'
 import DarkModeToggle from './components/DarkModeToggle'
+import UnitToggle from './components/UnitToggle'
 import ForecastCard from './components/ForecastCard'
 import { useDarkMode } from './hooks/useDarkMode'
 
@@ -19,11 +20,15 @@ export default function App() {
   // error: Stores any error messages if something goes wrong
   // favorites: Array of favorite cities saved by user
   // forecastData: Array of forecast data for next 5 days
+  // unit: 'metric' for Celsius or 'imperial' for Fahrenheit
+  // currentCity: Store the current city name to re-fetch when unit changes
   const [weatherData, setWeatherData] = useState(null)
   const [forecastData, setForecastData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [favorites, setFavorites] = useState([])
+  const [unit, setUnit] = useState('metric') // default to Celsius
+  const [currentCity, setCurrentCity] = useState(null)
 
   // useEffect: Loads favorites from localStorage when component mounts
   // localStorage persists data even after browser closes
@@ -34,6 +39,14 @@ export default function App() {
       setFavorites(JSON.parse(savedFavorites))
     }
   }, [])
+
+  // useEffect: Re-fetch weather data when unit changes (if we have a current city)
+  // This ensures temperatures update when user toggles between C and F
+  useEffect(() => {
+    if (currentCity) {
+      handleSearch(currentCity)
+    }
+  }, [unit])
 
   // saveFavoritesToStorage: Helper function to save favorites to localStorage
   const saveFavoritesToStorage = (updatedFavorites) => {
@@ -93,7 +106,8 @@ export default function App() {
       
       // Build the URL for the API request
       // encodeURIComponent ensures special characters and spaces are properly encoded
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=metric`
+      // units parameter: 'metric' for Celsius, 'imperial' for Fahrenheit
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=${unit}`
 
       // Fetch: Makes an HTTP request to the API
       // await: Wait for the response to come back
@@ -119,10 +133,13 @@ export default function App() {
         windSpeed: data.wind.speed,
         pressure: data.main.pressure
       })
+      
+      // Store the city name so we can re-fetch when unit changes
+      setCurrentCity(city)
 
       // Now fetch the 5-day forecast for the same city
       // This API returns weather forecasts every 3 hours for 5 days
-      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=metric`
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=${unit}`
       const forecastResponse = await fetch(forecastUrl)
       
       if (forecastResponse.ok) {
@@ -156,6 +173,11 @@ export default function App() {
     }
   }
 
+  // toggleUnit: Switch between Celsius and Fahrenheit
+  const toggleUnit = () => {
+    setUnit(prevUnit => prevUnit === 'metric' ? 'imperial' : 'metric')
+  }
+
   return (
     <div className={`min-h-screen transition-colors duration-500 ${
       darkMode
@@ -173,8 +195,11 @@ export default function App() {
             🌤️ Weather App
           </h1>
           
-          {/* Dark mode toggle button */}
-          {mounted && <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />}
+          {/* Toggle buttons for dark mode and temperature unit */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {mounted && <UnitToggle unit={unit} onToggle={toggleUnit} darkMode={darkMode} />}
+            {mounted && <DarkModeToggle darkMode={darkMode} onToggle={toggleDarkMode} />}
+          </div>
         </div>
       </header>
       
@@ -193,6 +218,7 @@ export default function App() {
           onAddFavorite={handleAddFavorite}
           isFavorite={weatherData && favorites.includes(weatherData.city)}
           darkMode={darkMode}
+          unit={unit}
         />
 
         {/* 5-Day Forecast: Shows weather forecast for next 5 days */}
@@ -213,6 +239,7 @@ export default function App() {
                   temperature={day.temperature}
                   description={day.description}
                   darkMode={darkMode}
+                  unit={unit}
                 />
               ))}
             </div>
