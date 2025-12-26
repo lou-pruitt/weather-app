@@ -6,6 +6,7 @@ import SearchBar from './components/SearchBar'
 import WeatherDisplay from './components/WeatherDisplay'
 import FavoritesList from './components/FavoritesList'
 import DarkModeToggle from './components/DarkModeToggle'
+import ForecastCard from './components/ForecastCard'
 import { useDarkMode } from './hooks/useDarkMode'
 
 export default function App() {
@@ -17,7 +18,9 @@ export default function App() {
   // loading: True while we're fetching data from API
   // error: Stores any error messages if something goes wrong
   // favorites: Array of favorite cities saved by user
+  // forecastData: Array of forecast data for next 5 days
   const [weatherData, setWeatherData] = useState(null)
+  const [forecastData, setForecastData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [favorites, setFavorites] = useState([])
@@ -79,9 +82,18 @@ export default function App() {
       // You can get one at: https://openweathermap.org/api
       const API_KEY = '26aae617d130745137c1f25d772b1cb8'
       
+      // Format city name for API: Replace ", CA" with ",CA,US" for better results
+      // OpenWeatherMap prefers format: "City,StateCode,CountryCode"
+      let formattedCity = city.trim()
+      if (formattedCity.includes(', CA')) {
+        formattedCity = formattedCity.replace(', CA', ',CA,US')
+      } else if (formattedCity.includes(',CA')) {
+        formattedCity = formattedCity.replace(',CA', ',CA,US')
+      }
+      
       // Build the URL for the API request
-      // This URL gets weather data for the city the user searched
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      // encodeURIComponent ensures special characters and spaces are properly encoded
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=metric`
 
       // Fetch: Makes an HTTP request to the API
       // await: Wait for the response to come back
@@ -107,10 +119,37 @@ export default function App() {
         windSpeed: data.wind.speed,
         pressure: data.main.pressure
       })
+
+      // Now fetch the 5-day forecast for the same city
+      // This API returns weather forecasts every 3 hours for 5 days
+      const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(formattedCity)}&appid=${API_KEY}&units=metric`
+      const forecastResponse = await fetch(forecastUrl)
+      
+      if (forecastResponse.ok) {
+        const forecastData = await forecastResponse.json()
+        
+        // Process forecast data: Get one forecast per day at noon (12:00)
+        // The API gives data every 3 hours, so we filter for noon readings
+        const dailyForecasts = forecastData.list.filter(item => {
+          // item.dt_txt looks like "2025-12-26 12:00:00"
+          // We want to keep only the 12:00:00 entries
+          return item.dt_txt.includes('12:00:00')
+        }).slice(0, 5) // Get first 5 days
+        
+        // Transform the data into a simpler format
+        const processedForecasts = dailyForecasts.map(item => ({
+          date: item.dt_txt.split(' ')[0], // Extract just the date "2025-12-26"
+          temperature: item.main.temp,
+          description: item.weather[0].description
+        }))
+        
+        setForecastData(processedForecasts)
+      }
     } catch (err) {
       // If anything goes wrong, show an error message
       setError(err.message)
       setWeatherData(null)
+      setForecastData([])
     } finally {
       // Whether successful or not, stop the loading animation
       setLoading(false)
@@ -155,6 +194,30 @@ export default function App() {
           isFavorite={weatherData && favorites.includes(weatherData.city)}
           darkMode={darkMode}
         />
+
+        {/* 5-Day Forecast: Shows weather forecast for next 5 days */}
+        {/* Only display if we have forecast data */}
+        {forecastData.length > 0 && (
+          <div className="mt-6 max-w-2xl mx-auto">
+            <h2 className={`text-xl sm:text-2xl font-bold mb-3 ${
+              darkMode ? 'text-white' : 'text-white'
+            }`}>
+              5-Day Forecast
+            </h2>
+            {/* Grid layout for forecast cards - wraps on smaller screens */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3">
+              {forecastData.map((day, index) => (
+                <ForecastCard
+                  key={index}
+                  date={day.date}
+                  temperature={day.temperature}
+                  description={day.description}
+                  darkMode={darkMode}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* FavoritesList component: Shows user's favorite cities */}
         {/* User can click favorites to quickly search or remove them */}
