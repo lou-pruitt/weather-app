@@ -26,23 +26,24 @@ export default function SearchBar({ onSearch }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <form onSubmit={handleSubmit} className="flex gap-2">
+    <div className="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in">
+      <form onSubmit={handleSubmit} className="flex gap-3">
         {/* Input field where user types the city name */}
         <input
           type="text"
-          placeholder="Enter city name..."
+          placeholder="Enter city name... (e.g., London, Tokyo, NYC)"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 px-5 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition placeholder-gray-400 text-gray-800"
+          autoFocus
         />
 
-        {/* Submit button */}
+        {/* Submit button with hover effects */}
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold transition"
+          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition transform hover:scale-105 active:scale-95 shadow-md"
         >
-          Search
+          🔍 Search
         </button>
       </form>
     </div>
