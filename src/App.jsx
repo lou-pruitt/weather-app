@@ -25,7 +25,7 @@ export default function App() {
 
       // API key for OpenWeatherMap (free tier)
       // You can get one at: https://openweathermap.org/api
-      const API_KEY = 'YOUR_API_KEY_HERE' // We'll replace this later
+      const API_KEY = '26aae617d130745137c1f25d772b1cb8'
       
       // Build the URL for the API request
       // This URL gets weather data for the city the user searched
